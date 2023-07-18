@@ -29,10 +29,14 @@ make clean run  # Just build and run OS.
 
 ez.
 
+## Tools
+Place useful scripts and programs to `tools` folder.
+Like IWFS extractor, yes.
+
 ## Todo list:
+- [X] Floppy driver
+- [X] Any FS support
 - [ ] Kernel
-- [ ] Floppy driver
-- [ ] Any FS support
 - [ ] Shell
 - [ ] FAT12 support
 - [ ] 32-bit mode
