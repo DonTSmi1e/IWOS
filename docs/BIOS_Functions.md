@@ -1,7 +1,7 @@
 # BIOS Functions
 ## int 10h
 ### Move cursor
-```assembly
+```x86asm
 mov ah, 0x02
 mov bh, 0
 mov dh, <row>
@@ -9,13 +9,13 @@ mov dl, <col>
 int 10h
 ```
 ### Write char
-```assembly
+```x86asm
 mov ah, 0x0E
 mov al, 'A'         ; any char
 int 10h
 ```
 ### Scrolling
-```assembly
+```x86asm
 mov ah, 0x06        ; scroll up
 mov ah, 0x07        ; scroll down
 mov al, <lines>     ; to scroll, 0 - clear
@@ -32,7 +32,7 @@ int 10h
 ```
 ## int 13h
 ### Read disk
-```assembly
+```x86asm
 mov ah, 0x02
 mov al, 1
 mov ch, 0
@@ -49,13 +49,13 @@ mov bx, memory_offset
 int 13h
 ```
 ### Reset disk
-```assembly
+```x86asm
 mov ah, 0x0
 int 13h
 ```
 ## int 16h
 ### Get key (blocking)
-```assembly
+```x86asm
 mov ax, 0           ; clear ax reg
 mov ah, 0           ; read keyboard scancode (blocking)
 int 16h
