@@ -1,15 +1,16 @@
 import os
+import sys
 
-def get_files():
+def get_files(disk_file):
     """
         Returns a dictionary of IWFS files.
     """
     files = {}
-    with open("disk.img", "rb") as f:
-        f.read(512)                             # We don't need bootloader, yes?
+    with open(disk_file, "rb") as f:
+        files["__boot__.bin"] = f.read(1024)
 
         while f:                                # Then we should read last part of our disk
-            chunk = f.read(4096)               # Every file is 10240 bytes == 10 kilobytes
+            chunk = f.read(10240)               # Every file is 10240 bytes == 10 kilobyte
             filename = ""                       # Empty string for filename
 
             # Trying to get filename
@@ -31,9 +32,21 @@ def get_files():
         f.close()
     return files
 
-files = get_files()
-os.system("mkdir -p unpack/")
-for file in files:
-    with open("unpack/" + file, 'wb') as f:
-        f.write(files[file])
-        f.close()
+if len(sys.argv) > 1:
+    files = get_files(sys.argv[1])
+
+    try:
+        os.mkdir("unpack/")
+    except FileExistsError:
+        pass
+
+    print("Extracting...")
+    for file in files:
+        print(file)
+        with open("unpack/" + file, 'wb') as f:
+            f.write(files[file])
+            f.close()
+else:
+    print(f"Usage: {sys.argv[0]} <filename>")
+
+
