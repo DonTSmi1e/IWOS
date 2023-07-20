@@ -2,7 +2,9 @@
 AS=nasm
 
 # OS files: bootloader, kernel, maybe drivers, idk
-BINARIES= 	bin/boot.bin	\
+BINARIES= 	bin/bootloader/mbr.bin				\
+			bin/bootloader/boot.bin				\
+			bin/empty.bin						\
 			bin/kernel.bin
 
 # Just don't touch it, write your own programs in src/programs/ folder
@@ -21,6 +23,9 @@ bin/%.bin: src/%.asm
 # Builds OS and programs, filling disk zeroes by setted size
 build: $(BINARIES) $(PROGRAMS)
 	truncate -s $(DISK_SIZE) $(DISK_NAME)
+
+# Builds programs
+programs: $(PROGRAMS)
 
 # Just runs qemu
 run: build
