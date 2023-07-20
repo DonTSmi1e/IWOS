@@ -17,15 +17,43 @@ kernel__main:
     mov si, msg_loaded
     call screen__print
 
+    ; Setup stack
+    mov ax, 0
+    mov ss, ax
+    mov sp, 5400h
+
+
+kernel__loop:
+    mov si, shell_file
+    jmp kernel__load
+
+
+kernel__load:
+    mov bx, 2800h
+    call fs__read
+    jc kernel__loop
+
+    call 1000h:2800h
+
+    jmp kernel__load
+
+
+halt:
     cli
     hlt
 
+
     ; --- INCLUDE --- ;
+%include 'src/common/string.inc'
 %include 'src/drivers/screen.inc'
+%include 'src/drivers/disk.inc'
+%include 'src/drivers/iwfs.inc'
+%include 'src/drivers/keyboard.inc'
 
 
     ; --- STRINGS --- ;
-msg_loaded:            db 'Kernel loaded.', NEWLINE, 0
+shell_file:            db 'shell.com', 0
+msg_loaded:            db 'IWOS Kernel loaded, welcome back.', NEWLINE, 0
 
 
     ; --- FOOTER --- ;
