@@ -1,80 +1,82 @@
 import os
 import sys
 
-def get_files(disk_file):
-    """
-        Returns a dictionary of IWFS files.
-    """
-    files = {}
-    with open(disk_file, "rb") as f:
-        files["__boot__.bin"] = f.read(1024)
+class IWFS:
+    def __init__(self, disk_file):
+        self.disk = disk_file
 
-        while f:                                # Then we should read last part of our disk
-            chunk = f.read(10240)               # Every file is 30720 bytes == 30 kilobytes
-            filename = ""                       # Empty string for filename
+    def files(self):
+        """
+            Returns a dictionary of IWFS files.
+        """
+        files = {}
+        with open(self.disk, "rb") as f:
+            files["__boot__.bin"] = f.read(1024)
 
-            # Trying to get filename
-            i = 0                               # Byte counter
-            for byte in chunk[2:]:
-                byte = chunk[2:][i:i+1]             # Taking one byte
-                if byte == b'\x00':             # Is 0x0?
-                    break                       # Ye, breaking...
-                else:                           # Nope, decoding byte
-                    filename += byte.decode()
-                    i += 1
+            while f:                                # Then we should read last part of our disk
+                chunk = f.read(10240)               # Every file is 30720 bytes == 30 kilobytes
+                filename = ""                       # Empty string for filename
 
-            # Now we have filename... or no?
-            if filename == "":
-                break                           # No, filename is empty - end of disk.
-                
-            files[filename] = chunk             # Loading our file to memory
+                # Trying to get filename
+                i = 0                               # Byte counter
+                for byte in chunk[2:]:
+                    byte = chunk[2:][i:i+1]             # Taking one byte
+                    if byte == b'\x00':             # Is 0x0?
+                        break                       # Ye, breaking...
+                    else:                           # Nope, decoding byte
+                        filename += byte.decode()
+                        i += 1
 
-        f.close()
-    return files
+                # Now we have filename... or no?
+                if filename == "":
+                    break                           # No, filename is empty - end of disk.
+                    
+                files[filename] = chunk             # Loading our file to memory
 
-if len(sys.argv) > 2:
-    match sys.argv[1]:
-        case "-u":
-            files = get_files(sys.argv[2])
+            f.close()
+        return files
+    
+    def write(self, file_path):
+        files = self.files()
 
-            try:
-                os.mkdir("unpack/")
-            except:
-                pass
+        # Create new file in table
+        with open(file_path, "rb") as target:
+            files[file_path.split("/")[-1]] = target.read()
+            target.close()
 
-            print("Extracting...")
-            for file in files:
-                print(file)
-                with open("unpack/" + file, 'wb') as f:
-                    f.write(files[file])
-                    f.close()
-        case "-p":
-            folder = sys.argv[2]
-            files = os.listdir(folder)
+        os.remove(self.disk) # Remove old disk image
+        size = 1440*1024 # 1440*1024 = 1.44MB
+        with open(self.disk, "ab") as disk:
+            # Write table
+            for filename in files:
+                disk.write(files[filename])
 
-            print("Packing...")
-            try:
-                os.remove("pack.img")
-            except:
-                pass
+            # Truncate image
+            disk.write(bytearray(size - disk.tell()))
+            disk.close()
 
-            size = 1440*1024
-            with open("pack.img", "ab") as disk:
-                # First of all we must write bootloader
-                with open(folder + "/__boot__.bin", "rb") as boot:
-                    disk.write(boot.read())
-                    boot.close()
-                
-                # Then we can load other files
-                for filename in files:
-                    with open(f"{folder}/{filename}", "rb") as file:
-                        disk.write(file.read())
-                        file.close()
+        return True
 
-                # Ok, now we should truncate our file
-                disk.write(bytearray(size - disk.tell()))
+    def delete(self, file_name):
+        files = self.files()
 
-                disk.close()
-else:
-    print(f"Usage: {sys.argv[0]} -u <disk.img>")
+        # Remove file from table
+        if file_name == "__boot__.bin":
+            return False
+        del files[file_name]
 
+        os.remove(self.disk) # Remove old disk image
+        size = 1440*1024 # 1440*1024 = 1.44MB
+        with open(self.disk, "ab") as disk:
+            # Write table
+            for filename in files:
+                disk.write(files[filename])
+
+            # Truncate image
+            disk.write(bytearray(size - disk.tell()))
+            disk.close()
+
+        return True
+
+if __name__ == "__main__":
+    print("Use iwfsmanager.py")
