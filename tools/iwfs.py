@@ -10,7 +10,7 @@ def get_files(disk_file):
         files["__boot__.bin"] = f.read(1024)
 
         while f:                                # Then we should read last part of our disk
-            chunk = f.read(10240)               # Every file is 10240 bytes == 10 kilobyte
+            chunk = f.read(10240)               # Every file is 30720 bytes == 30 kilobytes
             filename = ""                       # Empty string for filename
 
             # Trying to get filename
@@ -32,21 +32,49 @@ def get_files(disk_file):
         f.close()
     return files
 
-if len(sys.argv) > 1:
-    files = get_files(sys.argv[1])
+if len(sys.argv) > 2:
+    match sys.argv[1]:
+        case "-u":
+            files = get_files(sys.argv[2])
 
-    try:
-        os.mkdir("unpack/")
-    except FileExistsError:
-        pass
+            try:
+                os.mkdir("unpack/")
+            except:
+                pass
 
-    print("Extracting...")
-    for file in files:
-        print(file)
-        with open("unpack/" + file, 'wb') as f:
-            f.write(files[file])
-            f.close()
+            print("Extracting...")
+            for file in files:
+                print(file)
+                with open("unpack/" + file, 'wb') as f:
+                    f.write(files[file])
+                    f.close()
+        case "-p":
+            folder = sys.argv[2]
+            files = os.listdir(folder)
+
+            print("Packing...")
+            try:
+                os.remove("pack.img")
+            except:
+                pass
+
+            size = 1440*1024
+            with open("pack.img", "ab") as disk:
+                # First of all we must write bootloader
+                with open(folder + "/__boot__.bin", "rb") as boot:
+                    disk.write(boot.read())
+                    boot.close()
+                
+                # Then we can load other files
+                for filename in files:
+                    with open(f"{folder}/{filename}", "rb") as file:
+                        disk.write(file.read())
+                        file.close()
+
+                # Ok, now we should truncate our file
+                disk.write(bytearray(size - disk.tell()))
+
+                disk.close()
 else:
-    print(f"Usage: {sys.argv[0]} <filename>")
-
+    print(f"Usage: {sys.argv[0]} -u <disk.img>")
 
