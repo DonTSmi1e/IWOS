@@ -5,7 +5,7 @@ dead project 💀 (no, its not)
 Everything is wrong here, even the English here is wrong, because i am stupid russki.
 
 <img align="center" src="screenshots/1.png">
-<a href="https://github.com/DonTSmi1e/IWOS/releases" align="center"><h2>Download floppy image</h2></a>
+<a href="https://github.com/DonTSmi1e/IWOS/releases">Download floppy image</a>
 <hr>
 
 ## Problems
