@@ -22,6 +22,7 @@ main:
     ; Loading file from disk
     mov si, kernel_file
     mov bx, 0h
+    mov cl, 20
     call fs__read
     jc .error
 
@@ -44,7 +45,7 @@ main:
 
 
     ; --- STRINGS --- ;
-kernel_file:                    db 'kernel.bin', 0
+kernel_file:                    db 'kernel16.bin', 0
 
 msg_stage_2:                    db 'IWOS Bootloader -- Stage 2 loaded', NEWLINE, 0
 msg_error:                      db 'File not found.', NEWLINE, 0

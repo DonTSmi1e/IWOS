@@ -22,11 +22,14 @@ fs__read:
 .search:
     call disk__read
     jc .not_found
-    inc ax
+    add ax, 20
 
     add bx, 2
     mov di, bx
     sub bx, 2
+
+    cmp byte [di], 0
+    je .not_found
 
     call string__compare
     jnc .found
