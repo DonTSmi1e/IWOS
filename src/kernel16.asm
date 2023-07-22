@@ -9,7 +9,7 @@ org 0h
 bits 16
 
 jmp kernel__main
-file_name:          db 'kernel.bin', 0
+file_name:          db 'kernel16.bin', 0
 
 
     ; --- FUNCTIONS --- ;
@@ -30,6 +30,7 @@ kernel__loop:
 
 kernel__load:
     mov bx, 2800h
+    mov cl, 20
     call fs__read
     jc kernel__loop
 

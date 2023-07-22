@@ -4,8 +4,7 @@ AS=nasm
 # OS files: bootloader, kernel, maybe drivers, idk
 BINARIES= 	bin/bootloader/mbr.bin				\
 			bin/bootloader/boot.bin				\
-			bin/empty.bin						\
-			bin/kernel.bin
+			bin/kernel16.bin
 
 # Just don't touch it, write your own programs in src/programs/ folder
 PROGRAMS=$(patsubst src/programs/%.asm, bin/programs/%.bin, $(wildcard src/programs/*.asm))
