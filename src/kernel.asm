@@ -5,7 +5,7 @@
 
 
     ; --- HEADER --- ;
-org 0h
+org 200h
 bits 16
 
 jmp kernel__main
@@ -14,13 +14,13 @@ file_name:          db 'kernel.bin', 0
 
     ; --- FUNCTIONS --- ;
 kernel__main:
-    mov si, msg_loaded
-    call screen__print
-
     ; Setup stack
     mov ax, 0
     mov ss, ax
-    mov sp, 5400h
+    mov sp, 8000h
+
+    mov si, msg_loaded
+    call screen__print
 
 
 kernel__loop:
@@ -29,12 +29,12 @@ kernel__loop:
 
 
 kernel__load:
-    mov bx, 2800h
+    mov bx, 3000h
     mov cl, 20
     call fs__read
     jc kernel__loop
 
-    call 1000h:2800h
+    call 1000h:3000h
 
     jmp kernel__load
 

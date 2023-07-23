@@ -14,7 +14,7 @@ main:
     ; Setup ES:BX
     mov bx, 1000h                       ; ES = 1000h
     mov es, bx
-    mov bx, 2800h                       ; ES:BX = 1000h:2800h
+    mov bx, 0h                          ; ES:BX = 1000h:0h
 
     ; Reading disk
     mov ah, 0x02
@@ -30,7 +30,7 @@ main:
     mov ds, ax
     mov es, ax
 
-    jmp 1000h:2800h
+    jmp 1000h:0h
 
 .error:
     mov ah, 0x0E

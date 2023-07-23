@@ -5,7 +5,7 @@
 
 
     ; --- HEADER --- ;
-org 2800h
+org 3000h
 bits 16
 
 jmp main

@@ -7,7 +7,7 @@
 
 
     ; --- HEADER --- ;
-org 2800h
+org 0h
 bits 16
 
 
@@ -18,13 +18,12 @@ main:
 
     ; Loading file from disk
     mov si, kernel_file
-    mov bx, 0h
-    mov cl, 20
+    mov bx, 200h
     call fs__read
     jc .error
 
     ; Jump to kernel
-    jmp 1000h:0h
+    jmp 1000h:200h
 
 .error:
     mov si, msg_error
