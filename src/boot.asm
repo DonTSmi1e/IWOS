@@ -13,9 +13,6 @@ bits 16
 
     ; --- FUNCTIONS --- ;
 main:
-    ; Now we are at 0x12800, what we should to do?
-    ; First of all: load kernel.
-
     mov si, msg_stage_2
     call screen__print
 
@@ -38,17 +35,17 @@ main:
 
 
     ; --- INCLUDES --- ;
-%include 'src/bootloader/include/string.inc'
-%include 'src/bootloader/include/screen.inc'
-%include 'src/bootloader/include/disk.inc'
-%include 'src/bootloader/include/iwfs.inc'
+%include 'src/common/string.inc'
+%include 'src/drivers/screen.inc'
+%include 'src/drivers/disk.inc'
+%include 'src/drivers/iwfs.inc'
 
 
     ; --- STRINGS --- ;
-kernel_file:                    db 'kernel16.bin', 0
+kernel_file:                    db 'kernel.bin', 0
 
-msg_stage_2:                    db 'IWOS Bootloader -- Stage 2 loaded', NEWLINE, 0
-msg_error:                      db 'File not found.', NEWLINE, 0
+msg_stage_2:                    db 'IWOS Bootloader <3', NEWLINE, 0
+msg_error:                      db 'File not found :c', NEWLINE, 0
 
 
     ; --- FOOTER --- ;

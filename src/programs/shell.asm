@@ -99,11 +99,11 @@ cls:
 
 
     ; --- STRINGS --- ;
-kernel_file:            db 'kernel16.bin', 0
+kernel_file:            db 'kernel.bin', 0
 sh_prompt:              db '>', 0
 sh_help:                db 'Commands: help dir cls', NEWLINE, 0
 sh_error:               db 'Unknown command, type help to get list of all commands.', NEWLINE, 0
-sh_kernel:              db 'Nice try, but you cant load kernel.', NEWLINE, 0
+sh_kernel:              db "Nice try, but you can't load kernel.", NEWLINE, 0
 
 
     ; --- FOOTER --- ;

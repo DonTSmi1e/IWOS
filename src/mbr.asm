@@ -11,11 +11,6 @@ bits 16
 
     ; --- FUNCTIONS --- ;
 main:
-    call screen__clear
-
-    mov si, msg_stage_1
-    call screen__print
-
     ; Setup ES:BX
     mov bx, 1000h                       ; ES = 1000h
     mov es, bx
@@ -38,21 +33,12 @@ main:
     jmp 1000h:2800h
 
 .error:
-    mov si, msg_error
-    call screen__print
-    
+    mov ah, 0x0E
+    mov al, '!'
+    int 10h
+
     cli
     hlt
-
-
-    ; --- INCLUDES --- ;
-%include 'src/bootloader/include/screen.inc'
-%include 'src/bootloader/include/disk.inc'
-
-
-    ; --- STRINGS --- ;
-msg_stage_1:                    db 'IWOS Bootloader -- Stage 1 loaded', NEWLINE, 0
-msg_error:                      db 'Disk reading error, reboot your PC.', NEWLINE, 0
 
 
     ; --- FOOTER --- ;
