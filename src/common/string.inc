@@ -1,4 +1,4 @@
-; IWOS Kernel ; String library
+; String library
 ; Authors:
 ;   https://github.com/dontsmi1e    - Base code
 ; You can add yourself to this list if you made changes in the code.

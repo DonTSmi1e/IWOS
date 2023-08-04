@@ -1,4 +1,4 @@
-; IWOS Kernel ; Floppy driver
+; Disk driver
 ; Authors:
 ;   https://github.com/dontsmi1e    - Base code
 ; You can add yourself to this list if you made changes in the code.
@@ -11,21 +11,19 @@
 ; Input:
 ;   AX - LBA address
 ; Output:
-;   CH - Cylinder
-;   DH - Head
-;   CL - Sector
-disk__lba_to_chs:
+;   CH, DH, CL - C, H, S
+lba_to_chs:
     push ax
     push dx
 
     xor dx, dx
-    div word [sectors_per_track]
+    div word [bpb_sectors_per_track]
 
     inc dx
     mov cx, dx
 
     xor dx, dx
-    div word [heads]
+    div word [bpb_heads]
 
     mov dh, dl
     mov ch, al
@@ -38,12 +36,13 @@ disk__lba_to_chs:
 
     ret
 
-; Read data from disk
+
+; Read disk
 ; Input:
-;   AX - LBA driver
-;   CL - How many sectors to read
-;   DL - Drive number
-;   ES:BX - memory location
+;   AX - LBA address
+;   CL - Number of sectors to read
+;   DL - Disk number
+;   ES:BX - Memory address
 disk__read:
     push ax
     push bx
@@ -52,7 +51,7 @@ disk__read:
     push di
 
     push cx
-    call disk__lba_to_chs
+    call lba_to_chs
     pop ax
 
     mov ah, 0x02
@@ -73,7 +72,16 @@ disk__read:
     ret
 
 
-; Reset disk controller
+; Get disk status
+; Output:
+;   AL - Status
+disk__status:
+    mov ah, 0x1
+    int 13h
+    ret
+
+
+; Reset disk
 disk__reset:
     pusha
 
@@ -84,6 +92,7 @@ disk__reset:
     ret
 
 
-sectors_per_track:      dw 18
-heads:                  dw 2
+    ; --- VARIABLES --- ;
+bpb_sectors_per_track:  dw 18
+bpb_heads:              dw 2
 

@@ -1,4 +1,4 @@
-; IWOS Kernel ; Keyboard driver
+; Keyboard driver
 ; Authors:
 ;   https://github.com/dontsmi1e    - Base code
 ; You can add yourself to this list if you made changes in the code.
@@ -18,10 +18,11 @@ keyboard__get_key:
 
 
 ; Input string
+; Input:
+;   BL - character limit
 ; Output:
 ;   DI - entered string
-;   BL - character limit
-; p.s. i take it from https://wiki.osdev.org/Real_mode_assembly_I
+; p.s. i took it from https://wiki.osdev.org/Real_mode_assembly_I
 keyboard__get_string:
     pusha
     xor cl, cl
@@ -38,8 +39,7 @@ keyboard__get_string:
     cmp cl, bl              ; Character limit
     je .loop
 
-    mov ah, 0x0E
-    int 0x10                ; Print char
+    call screen__printchar  ; Print char
 
     stosb                   ; Put character in buffer
     inc cl
@@ -54,13 +54,13 @@ keyboard__get_string:
     dec cl		            ; Decrement counter
 
     mov al, 0x08
-    int 10h                 ; Moving cursor back
+    call screen__printchar  ; Moving cursor back
 
     mov al, 0x0
-    int 10h                 ; Printing space
+    call screen__printchar  ; Printing space
 
     mov al, 0x08
-    int 10h                 ; Moving cursor back
+    call screen__printchar  ; Moving cursor back
 
     jmp .loop
 
@@ -68,13 +68,8 @@ keyboard__get_string:
     mov al, 0
     stosb
 
-    mov ah, 0x0E
-
-    mov al, 0x0D
-    int 0x10
-
-    mov al, 0x0A
-    int 0x10
+    call screen__newline
 
     popa
     ret
+

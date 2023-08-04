@@ -2,8 +2,10 @@
 org 3000h
 bits 16
 
-jmp main
-file_name:          db 'hello.com', 0               ; Change to your filename
+; IWOS valid program magic code
+jmp iwosvpmv
+dw 0xFDFF
+iwosvpmv:
 
 
     ; --- FUNCTIONS --- ;
@@ -19,8 +21,4 @@ main:
 
     ; --- STRINGS --- ;
 hello_world:            db 'Hello, World!', NEWLINE, 0
-
-
-    ; --- FOOTER --- ;
-times 10240-($-$$) db 0
 

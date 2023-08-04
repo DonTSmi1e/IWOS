@@ -1,81 +1,85 @@
-; IWOS Kernel ; IWFS driver
+; Disk driver
 ; Authors:
 ;   https://github.com/dontsmi1e    - Base code
 ; You can add yourself to this list if you made changes in the code.
-;
-; Requirements:
-;   src/drivers/string.inc
-;   src/drivers/disk.inc
-;   src/drivers/screen.inc
 
 
     ; --- FUNCTIONS --- ;
-; Load file from disk
-; Input:
-;   SI - Filename
-;   CL - Sectors to read
-;   ES:BX - memory location
-fs__read:
+; Print list of files
+fs__dir:
     pusha
 
-    mov ax, 2
-    mov cl, 20
+    ; Setup registers to read disk
+    mov ax, 0
+    mov cl, 1
+    mov bx, 0xFDFF
 
 .search:
+    ; Read sector
+    inc ax
+    mov ah, 0
     call disk__read
-    jc .not_found
-    add ax, 20
+    jc .done
+    mov si, bx
 
-    add bx, 2
-    mov di, bx
-    sub bx, 2
+    ; Check if first byte is 0
+    cmp byte [si], 0
+    je .done
 
-    cmp byte [di], 0
-    je .not_found
+    ; Print file name
+    call screen__print
+    call screen__newline
 
-    call string__compare
-    jnc .found
+    ; Get file size
+    add si, 50
+    add ax, word [si]
 
     jmp .search
 
-.found:
+.done:
+    popa
+    ret
+
+
+; Load file to memory
+; Input:
+;   SI - filename
+;   BX - memory location
+fs__read:
+    pusha
+
+    ; Setup registers to read disk
+    mov ax, 0
+    mov cl, 1
+
+.search:
+    ; Read sector
+    inc ax
+    call disk__read
+    jc .not_found
+    mov di, bx
+
+    ; Check if first byte is 0
+    cmp byte [di], 0
+    je .not_found
+
+    ; Print file name
+    call string__compare
+    jc .search
+
+    ; Get file size
+    add di, 50
+    mov cl, byte [di]
+
+.load_file:
+    inc ax
+    call disk__read
     clc
     popa
     ret
 
 .not_found:
     stc
-    popa
-    ret
-
-
-; Print list of files
-; Input:
-;   ES:BX - memory location
-fs__dir:
-    pusha
-
-    mov ax, 2
-    mov cl, 1
-
-.search:
-    call disk__read
-    jc .done
-    add ax, 20
-
-    add bx, 2
-    mov si, bx
-    sub bx, 2
-
-    cmp byte [si], 0
-    je .done
-
-    call screen__print
-    call screen__newline
-
-    jmp .search
-
-.done:
     popa
     ret
 
