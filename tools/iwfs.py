@@ -1,82 +1,40 @@
 import os
 import sys
+import math
 
 class IWFS:
-    def __init__(self, disk_file):
-        self.disk = disk_file
-
-    def files(self):
-        """
-            Returns a dictionary of IWFS files.
-        """
-        files = {}
-        with open(self.disk, "rb") as f:
-            files["__boot__.bin"] = f.read(1024)
-
-            while f:                                # Then we should read last part of our disk
-                chunk = f.read(10240)               # Every file is 30720 bytes == 30 kilobytes
-                filename = ""                       # Empty string for filename
-
-                # Trying to get filename
-                i = 0                               # Byte counter
-                for byte in chunk[2:]:
-                    byte = chunk[2:][i:i+1]             # Taking one byte
-                    if byte == b'\x00':             # Is 0x0?
-                        break                       # Ye, breaking...
-                    else:                           # Nope, decoding byte
-                        filename += byte.decode()
-                        i += 1
-
-                # Now we have filename... or no?
-                if filename == "":
-                    break                           # No, filename is empty - end of disk.
-                    
-                files[filename] = chunk             # Loading our file to memory
-
-            f.close()
-        return files
+    def __init__(self, file):
+        self.file = file
     
-    def write(self, file_path):
-        files = self.files()
+    def append(self, file_path):
+        file = {}
 
         # Create new file in table
         with open(file_path, "rb") as target:
-            files[file_path.split("/")[-1]] = target.read()
+            file = {
+                "filename":     file_path.split("/")[-1].encode("utf-8"),
+                "sectors":      math.ceil(os.stat(file_path).st_size / 512).to_bytes(1, 'big'),
+                "owner":        "admin".encode("utf-8"),
+                "content":      target.read()
+                }
+            file["filename"]    += b"\x00" * (50 - len(file["filename"]))
+            file["owner"]       += b"\x00" * (30 + 431 - len(file["owner"]))
+            file["content"]     += b"\x00" * ((512 * int.from_bytes(file["sectors"], 'big')) - len(file["content"]))
             target.close()
 
-        os.remove(self.disk) # Remove old disk image
-        size = 1440*1024 # 1440*1024 = 1.44MB
-        with open(self.disk, "ab") as disk:
-            # Write table
-            for filename in files:
-                disk.write(files[filename])
-
-            # Truncate image
-            disk.write(bytearray(size - disk.tell()))
-            disk.close()
-
-        return True
-
-    def delete(self, file_name):
-        files = self.files()
-
-        # Remove file from table
-        if file_name == "__boot__.bin":
-            return False
-        del files[file_name]
-
-        os.remove(self.disk) # Remove old disk image
-        size = 1440*1024 # 1440*1024 = 1.44MB
-        with open(self.disk, "ab") as disk:
-            # Write table
-            for filename in files:
-                disk.write(files[filename])
-
-            # Truncate image
-            disk.write(bytearray(size - disk.tell()))
-            disk.close()
+        with open(self.file, "ab") as archive:
+            # Write file
+            for entry in file:
+                archive.write(file[entry])
+            archive.close()
 
         return True
 
 if __name__ == "__main__":
-    print("Use iwfsmanager.py")
+    if len(sys.argv) > 2:
+        file = IWFS(sys.argv[1])
+        file.append(sys.argv[2])
+        sys.exit(0)
+
+    print(f"Usage: {sys.argv[0]} <archive> <file>")
+    sys.exit(1)

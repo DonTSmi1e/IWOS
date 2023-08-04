@@ -1,22 +1,13 @@
-###### Incredibly Wrong FS
+# Incredibly Wrong FS
+Based on USTAR. Yep.
 
-## Disk structure (Floppy 1.44M)
-| Sector |                      |   |
-|--------|----------------------|---|
-| 1      | Bootloader (Stage 1) |   |
-| 2      | Bootloader (Stage 2) |   |
-| 3-*    | Files                |   |
+## Details
+Every file has a 512 bytes sector containing meta data, like filename, file size, etc. File data goes after this sector.
+File can be empty. Its size will be 0.
 
-ye, thats all.
-
-## File structure
-All files has fixed size (10240 bytes).
-Every file must contain special header:
-```x86asm
-jmp main                                ; Jump to main function
-file_name:          db 'test.com', 0    ; File name with null-terminator
-```
-and special footer:
-```x86asm
-times 10240-($-$$) db 0                  ; So output file will have size 1024 bytes
-```
+| Offset | Size | Type | Description                         |
+|:------:|:----:|:----:|-------------------------------------|
+| 0      | 50   | `DB` | File name (padded with zeroes)      |
+| 50     | 1    | `DB` | File size (in sectors count)        |
+| 51     | 30   | `DB` | Owner username (padded with zeroes) |
+| 81     | 431  | `DB` | Reserved (can be used for anything) |
