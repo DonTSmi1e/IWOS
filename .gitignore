@@ -1,5 +1,6 @@
 __pycache__
 /disk.img
-/pack.img
-bin/
+/debug.bin
+build/
 unpack/
+___*
