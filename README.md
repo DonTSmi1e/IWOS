@@ -8,6 +8,14 @@ Everything is wrong here, even the English here is wrong, because i am stupid ru
 <a href="https://github.com/DonTSmi1e/IWOS/releases">Download floppy image</a>
 <hr>
 
+## Resources
+<a href="https://wiki.osdev.org">OS Development wiki</a>
+
+<a href="https://github.com/icebreaker/floppybird">Flappy Bird game original sources</a>
+
+## User guide
+<a href="https://github.com/DonTSmi1e/IWOS/blob/main/USERGUIDE.md">Here it is!</a>
+
 ## Problems
 - IWFS (i wanna fat12, but not today)
 - 16-bit mode
@@ -21,14 +29,13 @@ Everything is wrong here, even the English here is wrong, because i am stupid ru
 
 Requirements:
 - NASM
-- Make
 - QEMU
 ```bash
-make clean      # Delete bin/ and disk.img
-make build      # Build project
-make run        # Run disk.img in QEMU (qemu-system-i386)
+./build.bash                                                                            # Clean and build OS
 
-make clean run  # Just build and run OS.
+qemu-system-i386 -debugcon file:debug.bin -fda build/output/disk.img                    # Run OS in QEMU
+
+./build.bash && qemu-system-i386 -debugcon file:debug.bin -fda build/output/disk.img    # Clean, build and run OS
 ```
 
 <hr>
@@ -54,11 +61,11 @@ Like IWFS extractor, yes.
 - [X] Any FS support
 - [X] Kernel
 - [X] Shell
+- [X] Graphic mode (build kernel with -DVESA argument. still in development)
 - [ ] FAT12 support
 - [ ] 32-bit mode
 - [ ] HDD/USB driver
 - [ ] FAT32 support
-- [ ] Graphic mode
 - [ ] Port NASM (or any supported asm)
 - [ ] Self-hosted
 
@@ -66,4 +73,3 @@ Like IWFS extractor, yes.
 ![](screenshots/2.png)
 ![](screenshots/3.png)
 ![](screenshots/4.png)
-![](screenshots/5.png)
