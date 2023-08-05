@@ -16,10 +16,6 @@ screen__printchar:
     pusha
     mov ah, 0x0E
 
-    %ifdef VESA
-        mov bl, 0x7
-    %endif
-
     int 10h
 
     popa
@@ -79,10 +75,6 @@ screen__clear:
     mov ah, 0x06                ; Scroll up
     mov al, 0                   ; Clear screen
     mov bh, 0x7                 ; Gray text color
-
-    %ifdef VESA
-        mov bx, 0x70
-    %endif
     
     mov ch, 0                   ; Y
     mov cl, 0                   ; X
