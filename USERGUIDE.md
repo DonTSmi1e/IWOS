@@ -15,31 +15,38 @@ Now let's move on to the operating system.
 ### Virtual machine (VirtualBox)
 #### Installation
 You can download VirtualBox from the official website: https://www.virtualbox.org/wiki/Downloads
+
 I won't describe the installation process, because it's not that difficult, right?
+
 ![](screenshots/userguide/1.png)
 
 #### Create VM
 Click on the "New" button, do not switch to expert mode. Set the values like in the screenshots:
+
 ![](screenshots/userguide/2.png)
 ![](screenshots/userguide/3.png)
 ![](screenshots/userguide/4.png)
 
 If the program gives a warning about the absence of a hard disk, ignore it.
+
 ![](screenshots/userguide/5.png)
 
 After creating a new virtual machine, select it from the list and go to "Settings".
 In the settings, go to the "Storage" item, add a new I82078 Floppy controller.
+
 ![](screenshots/userguide/6.png)
 ![](screenshots/userguide/7.png)
 
 Download the latest release of the operating system (namely disk.img file): https://github.com/DonTSmi1e/IWOS/releases
 
 Add a new floppy disk to the controller:
+
 ![](screenshots/userguide/8.png)
 
 Next, press the Add button, specify the path to the disk.img you downloaded and then press the Choose button.
 
 In the settings window, click OK and start the virtual machine.
+
 ![](screenshots/userguide/9.png)
 
 Commendable.
