@@ -2,23 +2,16 @@
 org 3000h
 bits 16
 
-; IWOS valid program magic code
-jmp iwosvpmv
-dw 0xFDFF
-iwosvpmv:
-
 
     ; --- FUNCTIONS --- ;
 main:
+    mov ah, 01h
     mov si, hello_world
-    call screen__print
+    int 20h
+
     ret
 
 
-    ; --- INCLUDE --- ;
-%include 'src/drivers/screen.inc'
-
-
     ; --- STRINGS --- ;
-hello_world:            db 'Hello, World!', NEWLINE, 0
+hello_world:            db 'Hello, World!', 0x0D, 0x0A, 0
 
