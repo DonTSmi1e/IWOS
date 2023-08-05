@@ -16,11 +16,11 @@ Everything is wrong here, even the English here is wrong, because i am stupid ru
 ## User guide
 <a href="https://github.com/DonTSmi1e/IWOS/blob/main/USERGUIDE.md">Here it is!</a>
 
+<a href="https://github.com/DonTSmi1e/IWOS/blob/main/USERGUIDE_RU.md">Про русских не забыл, держите.</a>
+
 ## Problems
-- IWFS (i wanna fat12, but not today)
-- 16-bit mode
-- No C/C++
-- No kernel API (or something that programs can use to print/load file/etc)
+- Read-only filesystem (i wanna fat12, but not today)
+- No `printf`
 
 <hr>
 
@@ -28,7 +28,8 @@ Everything is wrong here, even the English here is wrong, because i am stupid ru
 **WSL 2.0 supported**
 
 Requirements:
-- NASM
+- NASM <span style="color: #f00;">*</span>
+- Python 3 <span style="color: #f00;">*</span>
 - QEMU
 ```bash
 ./build.bash                                                                            # Clean and build OS
@@ -61,12 +62,9 @@ Like IWFS extractor, yes.
 - [X] Any FS support
 - [X] Kernel
 - [X] Shell
-- [X] Graphic mode (build kernel with -DVESA argument. still in development)
 - [ ] FAT12 support
-- [ ] 32-bit mode
-- [ ] HDD/USB driver
-- [ ] FAT32 support
 - [ ] Port NASM (or any supported asm)
+- [ ] Graphic mode
 - [ ] Self-hosted
 
 ## Screenshots
