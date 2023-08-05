@@ -27,23 +27,28 @@ root:
 " > "build/README.txt"
 
 # Assembling
-nasm src/boot.asm -o build/bin/boot.bin -DDATESTAMP="'$DATESTAMP'"
+nasm src/boot.asm -o build/bin/boot.bin -DDATESTAMP="'$DATESTAMP'" $@
 test $? -eq 0 || exit $?
 
-nasm src/kernel.asm -o build/bin/kernel.bin -DDATESTAMP="'$DATESTAMP'"
+nasm src/kernel/kernel.asm -o build/bin/kernel.sys -DDATESTAMP="'$DATESTAMP'" $@
 test $? -eq 0 || exit $?
 
-nasm src/programs/hello.asm -o build/bin/hello.bin
+nasm src/programs/hello.asm -o build/bin/hello.com $@
+test $? -eq 0 || exit $?
+
+nasm src/programs/text.asm -o build/bin/text.com $@
 test $? -eq 0 || exit $?
 
 # Filling root directory
-cp build/bin/kernel.bin build/root/kernel.bin
-cp build/bin/hello.bin build/root/hello.bin
+cp -a build/bin/*.sys build/root/
+cp -a build/bin/*.com build/root/
+mkdir -p root/
+cp -a root/. build/root/.
 
 # Packing to TAR archive
-python3 tools/iwfs.py build/output/root.iwfs build/root/kernel.bin
-python3 tools/iwfs.py build/output/root.iwfs build/root/hello.bin
-python3 tools/iwfs.py build/output/root.iwfs flappybird.com
+for filename in build/root/*; do
+    python3 tools/iwfs.py build/output/root.iwfs $filename
+done
 
 # Creating disk image
 cat build/bin/boot.bin >> build/output/disk.img
