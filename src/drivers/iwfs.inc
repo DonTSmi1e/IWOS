@@ -55,6 +55,7 @@ fs__read:
 .search:
     ; Read sector
     inc ax
+    mov ah, 0
     call disk__read
     jc .not_found
     mov di, bx
@@ -65,11 +66,17 @@ fs__read:
 
     ; Print file name
     call string__compare
-    jc .search
+    jc .skip
 
     ; Get file size
     add di, 50
     mov cl, byte [di]
+    jmp .load_file
+
+.skip:
+    add di, 50
+    add ax, word [di]
+    jmp .search
 
 .load_file:
     inc ax

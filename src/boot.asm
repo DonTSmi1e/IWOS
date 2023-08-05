@@ -3,7 +3,7 @@
 
 
     ; --- DEFINES --- ;
-%define KERNEL 'kernel.bin'
+%define KERNEL 'kernel.sys'
 
 
     ; --- FUNCTIONS --- ;
@@ -30,6 +30,7 @@ main:
 .search:
     ; Read sector
     inc ax
+    mov ah, 0
     call disk__read
     mov si, bx
 
@@ -40,7 +41,7 @@ main:
     ; Compare filename
     mov di, kernel_file
     call string__compare
-    jc .search
+    jc .skip
 
     ; If strings same, get file size
     add si, 50
@@ -50,6 +51,13 @@ main:
     mov bx, 0x1000
     mov es, bx
     mov bx, 0x0
+
+    jmp .load_file
+
+.skip:
+    add si, 50
+    add ax, word [si]
+    jmp .search
 
 .load_file:
     ; Read file to memory
