@@ -30,18 +30,25 @@ keyboard__get_string:
 .loop:
     call keyboard__get_key
 
+    ; Handle special keys
     cmp al, 0x08            ; Handle Backspace
     je .backspace
-
     cmp al, 0x0D            ; Handle Enter
     je .done
 
-    cmp cl, bl              ; Character limit
+    ; We must check if ASCII char is not "printable"
+    cmp al, 31
+    jbe .loop
+    cmp al, 127
+    jae .loop
+
+    ; Check if we at character limit
+    cmp cl, bl
     je .loop
 
-    call screen__printchar  ; Print char
-
-    stosb                   ; Put character in buffer
+    ; Print character
+    call screen__printchar
+    stosb
     inc cl
     jmp .loop
 
