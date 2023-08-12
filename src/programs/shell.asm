@@ -80,7 +80,7 @@ shell:
     jmp shell
 
 .cmd_dbg:                   db 'dbg', 0
-.debug:
+.dbg:
     int 0FFh
     jmp shell
 
