@@ -33,10 +33,10 @@ test $? -eq 0 || exit $?
 nasm src/kernel/kernel.asm -o build/bin/kernel.sys -DDATESTAMP="'$DATESTAMP'" $@
 test $? -eq 0 || exit $?
 
-nasm src/programs/hello.asm -o build/bin/hello.com $@
+nasm src/programs/shell.asm -o build/bin/shell.com -DDATESTAMP="'$DATESTAMP'" $@
 test $? -eq 0 || exit $?
 
-nasm src/programs/text.asm -o build/bin/text.com $@
+nasm src/programs/hello.asm -o build/bin/hello.com $@
 test $? -eq 0 || exit $?
 
 # Filling root directory
