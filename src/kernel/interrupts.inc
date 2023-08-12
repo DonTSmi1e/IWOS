@@ -77,7 +77,9 @@ INT22:
     cmp ah, 01h
     je .ah01
 
-    stc
+    cmp ah, 02h
+    je .ah02
+
     jmp .RETURN
 
 .ah00:
@@ -85,9 +87,57 @@ INT22:
     jmp .RETURN
 
 .ah01:
+    mov ax, 0
     call fs__read
     jmp .RETURN
 
+.ah02:
+    mov ax, 0
+    call fs__read
+    call disk__read
+    jmp .RETURN
+
 .RETURN:
+    iret
+
+
+;; Execute program
+; Input:
+;   fs__load
+; Output:
+;   Carry flag set if error
+INT80:
+    push ds
+    push es
+
+    push ax
+    mov ax, KERNEL_SEGMENT
+    mov ds, ax
+    mov es, ax
+    pop ax
+
+    call kernel.exec
+
+    pop es
+    pop ds
+    iret
+
+
+;; Print debug information
+INTFF:
+    push ds
+    push es
+
+    push ax
+    mov ax, KERNEL_SEGMENT
+    mov ds, ax
+    mov es, ax
+    pop ax
+
+    call debug.registers
+    call debug.kernel
+
+    pop es
+    pop ds
     iret
 

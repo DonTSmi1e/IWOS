@@ -13,17 +13,20 @@
 ; Output:
 ;   CH, DH, CL - C, H, S
 lba_to_chs:
+    push bx
     push ax
     push dx
 
     xor dx, dx
-    div word [bpb_sectors_per_track]
+    mov bx, 18
+    div bx
 
     inc dx
     mov cx, dx
 
     xor dx, dx
-    div word [bpb_heads]
+    mov bx, 2
+    div bx
 
     mov dh, dl
     mov ch, al
@@ -34,6 +37,7 @@ lba_to_chs:
     mov dl, al
     pop ax
 
+    pop bx
     ret
 
 
@@ -90,9 +94,4 @@ disk__reset:
 
     popa
     ret
-
-
-    ; --- VARIABLES --- ;
-bpb_sectors_per_track:  dw 18
-bpb_heads:              dw 2
 

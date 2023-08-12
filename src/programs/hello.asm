@@ -1,5 +1,5 @@
     ; --- HEADER --- ;
-org 3000h
+org 100h
 bits 16
 
 
@@ -9,7 +9,7 @@ main:
     mov si, hello_world
     int 20h
 
-    ret
+    retf
 
 
     ; --- STRINGS --- ;
