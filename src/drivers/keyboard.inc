@@ -63,7 +63,7 @@ keyboard__get_string:
     mov al, 0x08
     call screen__printchar  ; Moving cursor back
 
-    mov al, 0x0
+    mov al, 0x20
     call screen__printchar  ; Printing space
 
     mov al, 0x08
