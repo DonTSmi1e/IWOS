@@ -6,6 +6,11 @@
 
     ; --- DEFINES --- ;
 %define NEWLINE 0x0A
+%define COLOR_DARK          0x07
+%define COLOR_LIGHT         0x70
+%define COLOR_GREEN         0x0A
+%define COLOR_PANIC         0x1F
+%define COLOR_PANIC_GRAY    0x74
 
 
     ; --- FUNCTIONS --- ;
@@ -14,9 +19,14 @@
 ;   AL - Character
 screen__printchar:
     pusha
-    mov ah, 0x0E
 
+    mov ah, 0x0E
     int 10h
+
+    %ifdef DEBUG
+        mov dx, 0xE9
+        out dx, al
+    %endif
 
     popa
     ret
@@ -52,6 +62,47 @@ screen__print:
     jmp .loop
 
 
+; Print register value to screen
+; Input:
+;   AX - register
+screen__printhex:
+    pusha
+    mov si, .hex
+    call screen__print
+
+    push ax
+    mov al, ah
+    call .print_byte
+    pop ax
+    call .print_byte
+
+    call screen__newline
+    popa
+    ret
+
+.print_byte:
+    mov [.temp], al
+    shr al, 4
+    cmp al, 10
+    sbb al, 69h
+    das
+
+    call screen__printchar
+
+    mov al, [.temp]
+    ror al, 4
+    shr al, 4
+    cmp al, 10
+    sbb al, 69h
+    das
+
+    call screen__printchar
+    ret
+
+.temp:      db 0
+.hex:       db '0x', 0
+
+
 ; Just a newline.
 screen__newline:
     pusha                       ; Saving our registers
@@ -74,7 +125,7 @@ screen__clear:
     ; Scroll screen
     mov ah, 0x06                ; Scroll up
     mov al, 0                   ; Clear screen
-    mov bh, 0x7                 ; Gray text color
+    mov bh, COLOR_DARK          ; Gray text color
     
     mov ch, 0                   ; Y
     mov cl, 0                   ; X
