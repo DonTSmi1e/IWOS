@@ -8,19 +8,15 @@ Everything is wrong here, even the English here is wrong, because i am stupid ru
 <a href="https://github.com/DonTSmi1e/IWOS/releases">Download floppy image</a>
 <hr>
 
-## Resources
+## Used
 <a href="https://wiki.osdev.org">OS Development wiki</a>
 
-<a href="https://github.com/icebreaker/floppybird">Flappy Bird game original sources</a>
-
 ## User guide
-<a href="https://github.com/DonTSmi1e/IWOS/blob/main/USERGUIDE.md">Here it is!</a>
-
-<a href="https://github.com/DonTSmi1e/IWOS/blob/main/USERGUIDE_RU.md">Про русских не забыл, держите.</a>
+<a href="https://github.com/DonTSmi1e/IWOS/blob/main/USERGUIDE.md">English</a><br>
+<a href="https://github.com/DonTSmi1e/IWOS/blob/main/USERGUIDE_RU.md">Русский</a>
 
 ## Problems
 - Read-only filesystem (i wanna fat12, but not today)
-- No `printf`
 
 <hr>
 

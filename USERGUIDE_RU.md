@@ -98,6 +98,8 @@ python iwfs.py disk.img program.bin -D
 - NASM
 - Python 3
 
+Небольшая документация: https://github.com/DonTSmi1e/IWOS/blob/main/docs/IWOS.md
+
 Для взаимодействия с ядром ты можешь использовать чистые прерывания или ты можешь скачать библиотеку, которая чуть чуть упрощает этот процесс.
 
 Вот:

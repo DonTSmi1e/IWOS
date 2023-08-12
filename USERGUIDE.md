@@ -98,25 +98,27 @@ Required tools:
 - NASM
 - Python 3
 
+Small documentation: https://github.com/DonTSmi1e/IWOS/blob/main/docs/IWOS.md
+
 You can use pure interrupts to interact with the kernel, or you can download a library that makes it a little easier.
 
-Here:
 https://github.com/DonTSmi1e/IWOS/blob/main/src/programs/iwos.inc
+
 Download this file, place it in some development folder.
 
 Next to the library, create a new file, for example `program.asm`.
 Put some simple code there:
 ```x86asm
-[org 0x3000]
+[org 0x100]
 [bits 16]
 
 main:
-     call clear
+     call screen__clear
 
      mov si, string
-     call print
+     call screen__print
 
-     ret
+     retf
 
 %include 'iwos.inc'
 
