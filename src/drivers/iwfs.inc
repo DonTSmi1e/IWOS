@@ -44,13 +44,16 @@ fs__dir:
 ; Load file to memory
 ; Input:
 ;   SI - filename
-;   BX - memory location
+; Output:
+;   AX - file start
+;   CL - file size
 fs__read:
     pusha
 
     ; Setup registers to read disk
     mov ax, 0
     mov cl, 1
+    mov bx, 0xFDFF
 
 .search:
     ; Read sector
@@ -71,22 +74,29 @@ fs__read:
     ; Get file size
     add di, 50
     mov cl, byte [di]
-    jmp .load_file
+    jmp .done
 
 .skip:
     add di, 50
     add ax, word [di]
     jmp .search
 
-.load_file:
+.done:
     inc ax
-    call disk__read
+    mov [file_start], ax
+    mov [file_size], cx
     clc
     popa
+    mov ax, [file_start]
+    mov cx, [file_size]
     ret
 
 .not_found:
     stc
     popa
     ret
+
+
+file_start:     dw 0
+file_size:      dw 0
 
