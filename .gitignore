@@ -1,6 +1,7 @@
 __pycache__
 /disk.img
 /debug.bin
-build/
-unpack/
+/root/
+/build/
+/unpack/
 ___*
